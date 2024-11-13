@@ -1,2 +1,5 @@
 November 11, 2024. 6.06PM
 I need to gather data to trian my model. I couldnt exactly find a dataset that has what I need. I have created a script to Scrpae Quran 411 and get a json file of each chapter and its verses. I now need to find the corresponding audio to pair with the transliteraions.
+
+November 12, 2024. 11.10PM
+I found a site that lets me download a zip file of Quran recitation mp3. Everyayah.com lets me download them verse by verse so its easier to access

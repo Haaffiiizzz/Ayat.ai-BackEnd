@@ -5,3 +5,5 @@ November 12, 2024. 11.10PM
 I found a site that lets me download a zip file of Quran recitation mp3. Everyayah.com lets me download them verse by verse so its easier to access.
 11.44PM
 Used a little python script to organize the audio files into folders with each surah's verses.
+
+# Midterm Today November 13, 2024. 10.53PM

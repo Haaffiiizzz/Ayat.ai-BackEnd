@@ -7,3 +7,6 @@ I found a site that lets me download a zip file of Quran recitation mp3. Everyay
 Used a little python script to organize the audio files into folders with each surah's verses.
 
 # Midterm Today November 13, 2024. 10.53PM
+
+November 20, 2024
+Starting with tutorials today.

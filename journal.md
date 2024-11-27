@@ -10,3 +10,6 @@ Used a little python script to organize the audio files into folders with each s
 
 November 20, 2024
 Starting with tutorials today.
+
+November 26, 9.19PM
+Converted all the verses to MFCC (Mel-Frequency Cepstral Coefficients) which will be used to train the model. (I think)

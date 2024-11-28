@@ -47,9 +47,6 @@ soupsieve==2.6
 SpeechRecognition==3.11.0
 sympy==1.13.1
 threadpoolctl==3.5.0
-torch==2.5.1+cu118
-torchaudio==2.5.1+cu118
-torchvision==0.20.1+cu118
 trio==0.27.0
 trio-websocket==0.11.1
 typing_extensions==4.12.2

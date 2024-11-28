@@ -1,3 +1,4 @@
+
 import numpy as np
 import os
 import matplotlib.pyplot as plt
@@ -9,7 +10,11 @@ for folder in os.listdir(folderDir):
     for file in os.listdir(folderPath):
         filePath = os.path.join(folderPath, file)
         numpyArray = np.load(filePath)
-        print(f"{folder} {file}: {numpyArray}")
-    print("\n")
+        plt.figure(figsize=(10, 6))
+        plt.imshow(numpyArray, aspect='auto', origin='lower', cmap='viridis')
+        plt.colorbar(label="Intensity")
+        plt.title(file)
+        plt.xlabel("Time")
+        plt.ylabel("Frequency")
+        plt.show()
     break
-        

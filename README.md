@@ -1,3 +1,2 @@
 Using Machine Learning, I plan on creating an API, and later on, an app that can recognize a verse and surah of a Qur'an recitation audio. The name of this repository means Discoverer in Arabic.
 
-I'm currenlty searching for Qur'an Transliteration datasets which I will use to train a speech recognition model. I do not know yet if I will be creating my own model or if I will retrain a pretrained model. If I cannot find any datasets to use, I will make my own datasets by getting Qur'an recitations and piecing them together with the equivalent transliteration. 

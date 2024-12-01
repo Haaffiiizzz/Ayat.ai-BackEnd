@@ -25,5 +25,16 @@ import time
 # num = np.ones((2,3))
 # print(num)
 
-torch_range = torch.arange(0, 10)
-print(torch_range)
+# torch_range = torch.arange(1, 11)
+# print(torch_range)
+
+# like_tensor = torch.zeros_like(input=torch_range)
+# print(like_tensor)
+
+# new_tensor = torch.rand(3, 4)
+# print(new_tensor)
+# print(f"Dtype: {new_tensor.dtype}\nSize {new_tensor.size()}\ndevice {new_tensor.device}")
+
+tensor_one = torch.rand(2, 3)
+tensor_two = torch.rand(3, 2)
+print(torch.matmul(tensor_one, tensor_two))

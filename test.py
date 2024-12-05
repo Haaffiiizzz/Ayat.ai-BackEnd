@@ -7,7 +7,8 @@ folderDir = r"C:\Users\dadaa\Sudais New"
 for folder in os.listdir(folderDir):
     folderPath = os.path.join(folderDir, folder)
     
-    for file in os.listdir(folderPath):
+    for file in os.listdir(folderPath): 
+    
         filePath = os.path.join(folderPath, file)
         numpyArray = np.load(filePath)
         plt.figure(figsize=(10, 6))

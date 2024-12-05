@@ -35,6 +35,8 @@ import time
 # print(new_tensor)
 # print(f"Dtype: {new_tensor.dtype}\nSize {new_tensor.size()}\ndevice {new_tensor.device}")
 
-tensor_one = torch.rand(2, 3)
-tensor_two = torch.rand(3, 2)
-print(torch.matmul(tensor_one, tensor_two))
+# tensor_one = torch.rand(2, 3)
+# tensor_two = torch.rand(3, 2)
+# print(torch.matmul(tensor_one, tensor_two))
+
+print(torch.matmul(torch.rand(2, 3), torch.rand(3, 3)))

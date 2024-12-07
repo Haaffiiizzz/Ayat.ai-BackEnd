@@ -39,4 +39,4 @@ import time
 # tensor_two = torch.rand(3, 2)
 # print(torch.matmul(tensor_one, tensor_two))
 
-print(torch.matmul(torch.rand(2, 3), torch.rand(3, 3)))
+# print(torch.matmul(torch.rand(2, 3), torch.rand(3, 3)))

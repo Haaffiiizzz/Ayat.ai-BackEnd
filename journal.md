@@ -13,3 +13,7 @@ Starting with tutorials today.
 
 November 26, 9.19PM
 Converted all the verses to MFCC (Mel-Frequency Cepstral Coefficients) which will be used to train the model. (I think)
+
+December 16, 2024. 11:42 PM
+Been Busy with school and finals and havent had time to work on this.
+Will continue after exams

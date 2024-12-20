@@ -17,3 +17,6 @@ Converted all the verses to MFCC (Mel-Frequency Cepstral Coefficients) which wil
 December 16, 2024. 11:42 PM
 Been Busy with school and finals and havent had time to work on this.
 Will continue after exams
+
+December 19, 2024 11.17 PM
+Finished with finals. Back to turorials and this.

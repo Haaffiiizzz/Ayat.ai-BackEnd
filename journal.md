@@ -20,3 +20,7 @@ Will continue after exams
 
 December 19, 2024 11.17 PM
 Finished with finals. Back to turorials and this.
+
+January 8th, 2025 3.58 AM
+I am considering working with Whisper or Google's speech to text to transcribe recitations to text. 
+This will then be used to train my model.

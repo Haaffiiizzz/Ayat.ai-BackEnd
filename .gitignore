@@ -1,2 +1,7 @@
 venv/
 *.mp3
+*.json
+*.txt
+*.vtt
+*.tsv
+*.srt

@@ -66,3 +66,8 @@ if rankedMatches:
     print("Matched first verse:", best["isFirstVerseBest"])
 else:
     print("No matching chunk found above threshold.")
+def main():
+    print()
+
+if __name__ == "__main__":
+    main()

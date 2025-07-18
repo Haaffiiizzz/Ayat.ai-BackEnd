@@ -5,11 +5,18 @@ from rapidfuzz import process, fuzz
 
 os.environ["PATH"] += os.pathsep + r"C:\ffmpeg\bin"
 
-model = whisper.load_model("small")
+def TranscribeAudio(AudioPath: str) -> str:
+    '''
+    Use Whisper Model to trancribe the audio file given its path, and return the transcribed audio
+    '''
+    
+    #load model
+    
+    model = whisper.load_model("small")
+    transcribedObject: dict = model.transcribe("Test2.mp3", language="ar")
+    ayahText = transcribedObject["text"].strip()
+    return ayahText
 
-result = model.transcribe("Test2.mp3", language="ar")
-resultAyah = result["text"].strip()
-print("Transcribed audio", resultAyah)
 
 with open("dataset.json", "r", encoding="utf-8") as file:
     dataset = json.load(file)

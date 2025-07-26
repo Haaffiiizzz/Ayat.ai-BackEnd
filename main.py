@@ -13,34 +13,43 @@ def TranscribeAudio(AudioPath: str) -> str:
     #load model
     
     model = whisper.load_model("small")
-    transcribedObject: dict = model.transcribe("Test2.mp3", language="ar")
-    ayahText = transcribedObject["text"].strip()
-    return ayahText
+    
+    TranscribedObject: dict = model.transcribe(AudioPath, language="ar")
+    AyahText = TranscribedObject["text"].strip()
+    return AyahText
 
+def LoadDataSet(DatasetPath: str) -> dict:
+    
+    with open(DatasetPath, "r", encoding="utf-8") as file:
+        dataset: dict = json.load(file)
+    return dataset
 
-with open("dataset.json", "r", encoding="utf-8") as file:
-    dataset = json.load(file)
+def CreateChunks(Dataset: dict, WindowSize: int) -> list:
+    #Return a list of joined verses in chunks of 2, 3.. depending on WindowSize.
+    chunks = []
+    for i in range(len(Dataset) - WindowSize + 1):
+        chunkText = " ".join([Dataset[i + j]["Verse"] for j in range(WindowSize)])
+        chunks.append({
+            "text": chunkText,
+            "startIndex": i,
+            "verses": [Dataset[i + j] for j in range(WindowSize)]
+        })
+    return chunks
 
-windowSize = 2
-chunks = []
-for i in range(len(dataset) - windowSize + 1):
-    chunkText = " ".join([dataset[i + j]["Verse"] for j in range(windowSize)])
-    chunks.append({
-        "text": chunkText,
-        "startIndex": i,
-        "verses": [dataset[i + j] for j in range(windowSize)]
-    })
+def ProcessMatches(ResultAyah: str, chunks: list):
+    
+    #this returns a list of tuples where each tuple is (chunked ayats, similarity percentage, index of chunk in chunks list)
 
-matches = process.extract(
-    resultAyah,
-    [c["text"] for c in chunks],
-    scorer=fuzz.token_set_ratio,
-    score_cutoff=70,
-    limit=None
-) #this returns a list of tuples where each tuple is (chunked ayats, similarity percentage, index of chunk in chunks list)
+    matches = process.extract(
+        ResultAyah,
+        [c["text"] for c in chunks],
+        scorer=fuzz.token_set_ratio,
+        score_cutoff=70,
+        limit=None
+    ) 
+    return matches
 
-print(matches)
-
+def 
 rankedMatches = []
 
 for matchText, score, idx in matches:

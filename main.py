@@ -2,6 +2,7 @@ import whisper
 import os
 import json
 from rapidfuzz import process, fuzz
+import time
 
 os.environ["PATH"] += os.pathsep + r"C:\ffmpeg\bin"
 
@@ -11,17 +12,19 @@ def TranscribeAudio(AudioPath: str) -> str:
     '''
     
     #load model
-    
+    now = time.time()
     model = whisper.load_model("small")
+    
+    print("time to load model", time.time()-now)
     
     TranscribedObject: dict = model.transcribe(AudioPath, language="ar")
     AyahText = TranscribedObject["text"].strip()
     return AyahText
 
-def LoadDataSet(DatasetPath: str) -> dict:
+def LoadDataSet(DatasetPath: str) -> list:
     
     with open(DatasetPath, "r", encoding="utf-8") as file:
-        dataset: dict = json.load(file)
+        dataset: list = json.load(file)
     return dataset
 
 def CreateChunks(Dataset: dict, WindowSize: int) -> list:
@@ -36,54 +39,39 @@ def CreateChunks(Dataset: dict, WindowSize: int) -> list:
         })
     return chunks
 
-def ProcessMatches(ResultAyah: str, chunks: list):
+def ProcessMatches(ResultAyah: str, Dataset: list):
     
-    #this returns a list of tuples where each tuple is (chunked ayats, similarity percentage, index of chunk in chunks list)
+    #this returns a list of tuples where each tuple is (Verse, similarity percentage, index of verse in dataset)
 
     matches = process.extract(
         ResultAyah,
-        [c["text"] for c in chunks],
+        [i["Verse"] for i in Dataset],
         scorer=fuzz.token_set_ratio,
         score_cutoff=70,
         limit=None
     ) 
+    
+    matches.sort(key= lambda x: x[1], reverse=True )
     return matches
 
-def 
-rankedMatches = []
 
-for matchText, score, idx in matches:
-    chunk = chunks[idx]
-    firstVerseText = chunk["verses"][0]["Verse"]
-    secondVerseText = chunk["verses"][1]["Verse"]
 
-    scoreFirst = fuzz.token_set_ratio(resultAyah, firstVerseText)
-    scoreSecond = fuzz.token_set_ratio(resultAyah, secondVerseText)
-
-    isFirstVerseBest = scoreFirst >= scoreSecond
-
-    rankedMatches.append({
-        "chunk": chunk,
-        "overallScore": score,
-        "isFirstVerseBest": isFirstVerseBest
-    })
-
-rankedMatches.sort(
-    key=lambda x: (x["isFirstVerseBest"], x["overallScore"]),
-    reverse=True
-)
-
-if rankedMatches:
-    best = rankedMatches[0]
-    print("Best matching chunk ({} verses):".format(windowSize))
-    for verse in best["chunk"]["verses"]:
-        print(verse)
-    print("\nSimilarity score:", best["overallScore"])
-    print("Matched first verse:", best["isFirstVerseBest"])
-else:
-    print("No matching chunk found above threshold.")
 def main():
-    print()
+    ayahPath = "Test2.mp3"
+    transcribedAudio = TranscribeAudio(ayahPath)
+    
+    dataset = LoadDataSet("dataset.json")
+    
+    matches = ProcessMatches(transcribedAudio, dataset)
+    if matches:
+        
+        bestMatch = matches[0]
+        bestMatchDict = dataset[bestMatch[2]] #bestMatch[2] is the index of bestmatch in  dataset
+        
+        print(f"Surah Number: {bestMatchDict['Surah']}\nVerse Number: {bestMatchDict['Ayah']}\nVerse: {bestMatchDict['Verse']}")
+    else:
+        print("Close match not found!")
+    
 
 if __name__ == "__main__":
     main()

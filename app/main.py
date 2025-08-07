@@ -15,7 +15,7 @@ async def uploadAudio(audioFile: Annotated[UploadFile, File()]):
     audio = audioFile.file
     
     result = await run_in_threadpool(doProcess, audio)
-    return result if result else {}
+    return result if result else {"res": "empty"}
     
 def doProcess(audioFile):
     transcribedAudio = TranscribeAudio(audioFile)

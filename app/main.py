@@ -15,7 +15,11 @@ async def uploadAudio(audioFile: Annotated[UploadFile, File()]):
     audio = audioFile.file
     
     result = await run_in_threadpool(doProcess, audio)
-    return result if result else {"res": "empty"}
+    if result:
+        return result
+    else:
+        default = {"Verse": None, "Ayah": None, "Surah": None} #ayah is the text itself
+        return default
     
 def doProcess(audioFile):
     transcribedAudio = TranscribeAudio(audioFile)

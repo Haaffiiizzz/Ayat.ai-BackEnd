@@ -19,7 +19,7 @@ async def uploadAudio(audioFile: Annotated[UploadFile, File()]):
     if result:
         return result
     else:
-        default = {"Verse": None, "Ayah": None, "Surah": None} #ayah is the text itself
+        default = {"SurahInfo": None, "VerseNumber": None, "VerseArabic": None, "VerseEnglish": None}
         return default
     
 def doProcess(audioFile):
@@ -53,9 +53,7 @@ def doProcess(audioFile):
 
         newDict = {"SurahInfo": surahInfo, "VerseNumber": verseNumber, "VerseArabic": verseArabic, "VerseEnglish": verseEnglish}
 
-        
-        #need to get extra info from translation json
-        return bestMatchDict
+        return newDict
     else:
         return None
     

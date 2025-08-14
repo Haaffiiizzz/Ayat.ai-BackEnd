@@ -37,7 +37,7 @@ def doProcess(audioFile):
 
         
         surahNumber = int(bestMatchDict["Surah"])
-        verseNumber = bestMatchDict["Ayah"]
+        verseNumber = int(bestMatchDict["Ayah"])
 
         surahDict = fullDataset[surahNumber - 1]
 

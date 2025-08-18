@@ -60,6 +60,20 @@ def ProcessMatches(ResultAyah: str, Dataset: list):
     matches.sort(key= lambda x: x[1], reverse=True )
     return matches
 
+def SearchKeyword(Keyword: str) -> list:
+    with open("FullDataset.json", "r", encoding="utf-8") as datasetFile:
+        dataset: list = json.load(datasetFile)
+
+    result = []
+
+    for surah in dataset:
+        verses = surah["verses"]
+        for verse in verses:
+            if Keyword in verse["translation"]:
+                verseData = {"SurahNumber": surah["id"], "VerseNumber": verse["id"], "VerseArabic": verse["text"], "VerseEnglish": verse["translation"]}
+                result.append(verseData)
+                
+    return result
 
 
 # def main():

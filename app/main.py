@@ -60,6 +60,8 @@ def doProcess(audioFile):
 @router.get("/searchkeyword")
 def Search( keyword: str):
     result = SearchKeyword(keyword)
+    if len(result) == 0:
+        return None
     return result
 
     

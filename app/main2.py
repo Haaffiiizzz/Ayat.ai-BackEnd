@@ -69,7 +69,7 @@ def SearchKeyword(Keyword: str) -> list:
     for surah in dataset:
         verses = surah["verses"]
         for verse in verses:
-            if Keyword in verse["translation"]:
+            if Keyword.strip().lower() in verse["translation"].strip().lower():
                 verseData = {"SurahNumber": surah["id"], "VerseNumber": verse["id"], "VerseArabic": verse["text"], "VerseEnglish": verse["translation"]}
                 result.append(verseData)
                 

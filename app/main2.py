@@ -4,7 +4,8 @@ import json
 from rapidfuzz import process, fuzz
 import time
 import tempfile
-
+from dotenv import load_dotenv
+load_dotenv()
 
 #load model
 model = whisper.load_model("small")
@@ -70,7 +71,8 @@ def SearchKeyword(Keyword: str) -> list:
         verses = surah["verses"]
         for verse in verses:
             if Keyword.strip().lower() in verse["translation"].strip().lower():
-                verseData = {"SurahNumber": surah["id"], "VerseNumber": verse["id"], "VerseArabic": verse["text"], "VerseEnglish": verse["translation"]}
+                surahInfo = f"{surah['id']}. {surah['transliteration']} - {surah['translation']}"
+                verseData = {"SurahInfo": surahInfo, "VerseNumber": verse["id"], "VerseArabic": verse["text"], "VerseEnglish": verse["translation"]}
                 result.append(verseData)
                 
     return result

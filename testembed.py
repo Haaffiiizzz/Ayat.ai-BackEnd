@@ -50,9 +50,9 @@ def search(query: str, k: int = 10):
 
 
 
-
-
 if __name__ == "__main__":
     # quick test search
-    demo = search("wealth", k=10)
-    print(demo)
+    demo = search("taking care of parents", k=10)
+    for idx, res in demo.iterrows():
+        print(res)
+        print("\n")

@@ -1,6 +1,6 @@
 from fastapi import FastAPI, APIRouter, UploadFile, File
 from typing import  Annotated
-from .main2 import TranscribeAudio, LoadDataSet, ProcessMatches, SearchKeyword
+from .main2 import TranscribeAudio, LoadDataSet, ProcessMatches, SearchKeyword, SearchEmbedding
 from starlette.concurrency import run_in_threadpool
 import json 
 
@@ -60,6 +60,13 @@ def doProcess(audioFile):
 @router.get("/searchkeyword")
 def Search( keyword: str):
     result = SearchKeyword(keyword)
+    if len(result) == 0:
+        return None
+    return result
+
+@router.get("/searchembedding")
+def SearchEmbed(query: str):
+    result = SearchEmbedding(query)
     if len(result) == 0:
         return None
     return result

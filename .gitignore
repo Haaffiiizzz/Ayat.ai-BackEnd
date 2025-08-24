@@ -5,3 +5,4 @@ venv/
 *.vtt
 *.tsv
 *.srt
+app/__pycache__

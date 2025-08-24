@@ -93,7 +93,7 @@ def SearchKeyword(Keyword: str) -> list:
 
 def SearchEmbedding(Query: str, limit: int = 25 ) -> list:
     
-    q = EmbeddingModel.encode(Query, normalize_embeddings=True)
+    q = EmbeddingModel.encode_query(Query, normalize_embeddings=True)
     scores = embeddings @ q  # cosine similarity
     topk = np.argpartition(-scores, kth=min(limit, len(scores)-1))[:limit]
     topk = topk[np.argsort(-scores[topk])]

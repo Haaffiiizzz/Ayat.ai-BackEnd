@@ -6,3 +6,4 @@ venv/
 *.tsv
 *.srt
 app/__pycache__
+.env

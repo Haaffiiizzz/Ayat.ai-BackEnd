@@ -3,6 +3,7 @@ from typing import  Annotated
 from .main2 import TranscribeAudio, LoadDataSet, ProcessMatches, SearchKeyword, SearchEmbedding
 from starlette.concurrency import run_in_threadpool
 import json 
+from .Search import searchVerses
 
 app =  FastAPI(title="Muktashif")
 router = APIRouter( )
@@ -66,10 +67,17 @@ def Search( keyword: str):
 
 @router.get("/searchembedding")
 def SearchEmbed(query: str):
-    result = SearchEmbedding(query)
-    if len(result) == 0:
+    results = []
+    searchResult = searchVerses(query)
+
+    with open("app/data/VersesWithID.json", "r", encoding="utf-8") as file:
+        verseIDJson = json.load(file)
+    for result in searchResult:
+        results.append(verseIDJson[result["verseId"]])
+        
+    if len(results) == 0:
         return None
-    return result
+    return results
 
     
 app.include_router(router)  

@@ -17,11 +17,11 @@ def l2_normalize(mat: np.ndarray, axis=1, eps=1e-12):
 
 TransciptionModel = whisper.load_model("small")
 
-EmbeddingModel = SentenceTransformer("all-MiniLM-L6-v2")
-embeddings = np.load("app/data/verses_emb_minilm_cosine.npy")
-embeddings = l2_normalize(np.asarray(embeddings))
-df = pd.read_json("app/data/Verses.json")
-df["VerseEnglish"] = df["VerseEnglish"].fillna("").str.strip()
+# EmbeddingModel = SentenceTransformer("all-MiniLM-L6-v2")
+# embeddings = np.load("app/data/verses_emb_minilm_cosine.npy")
+# embeddings = l2_normalize(np.asarray(embeddings))
+# df = pd.read_json("app/data/Verses.json")
+# df["VerseEnglish"] = df["VerseEnglish"].fillna("").str.strip()
 
 
 def TranscribeAudio(audioFile) -> str:
@@ -91,18 +91,18 @@ def SearchKeyword(Keyword: str) -> list:
                 
     return result
 
-def SearchEmbedding(Query: str, limit: int = 25 ) -> list:
+# def SearchEmbedding(Query: str, limit: int = 25 ) -> list:
     
-    q = EmbeddingModel.encode_query(Query, normalize_embeddings=True)
-    scores = embeddings @ q  # cosine similarity
-    topk = np.argpartition(-scores, kth=min(limit, len(scores)-1))[:limit]
-    topk = topk[np.argsort(-scores[topk])]
-    results = df.iloc[topk][[
-        "SurahNumber", "VerseNumber", "VerseWithHarakat", "VerseEnglish"
-    ]].copy()
-    results["score"] = scores[topk]
+#     q = EmbeddingModel.encode_query(Query, normalize_embeddings=True)
+#     scores = embeddings @ q  # cosine similarity
+#     topk = np.argpartition(-scores, kth=min(limit, len(scores)-1))[:limit]
+#     topk = topk[np.argsort(-scores[topk])]
+#     results = df.iloc[topk][[
+#         "SurahNumber", "VerseNumber", "VerseWithHarakat", "VerseEnglish"
+#     ]].copy()
+#     results["score"] = scores[topk]
     
-    return results.to_dict(orient="records")
+#     return results.to_dict(orient="records")
 
 
 

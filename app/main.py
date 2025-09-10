@@ -31,7 +31,8 @@ def doProcess(audioFile):
     if matches:
         
         bestMatch = matches[0]
-        bestMatchDict = dataset[bestMatch[2]] #bestMatch[2] is index of the best match dict in the dtaaset list
+        verseIndex = bestMatch[2]
+        bestMatchDict = dataset[verseIndex] #bestMatch[2] is index of the best match dict in the dtaaset list
         
         with open("FullDataset.json", "r", encoding="utf-8") as file:
             fullDataset = json.load(file)
@@ -52,7 +53,7 @@ def doProcess(audioFile):
 
         surahInfo= f"{surahNumber}. {nameTransliteration} - {nameTranslation}"
 
-        newDict = {"SurahInfo": surahInfo, "VerseNumber": verseNumber, "VerseArabic": verseArabic, "VerseEnglish": verseEnglish}
+        newDict = {"SurahInfo": surahInfo, "VerseNumber": verseNumber, "VerseArabic": verseArabic, "VerseEnglish": verseEnglish, "verseIndex" : verseIndex}
 
         return newDict
     else:

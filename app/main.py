@@ -1,6 +1,6 @@
 from fastapi import FastAPI, APIRouter, UploadFile, File
 from typing import  Annotated
-from .main2 import TranscribeAudio, LoadDataSet, ProcessMatches, SearchKeyword, SearchEmbedding
+from .main2 import TranscribeAudio, LoadDataSet, ProcessMatches, SearchKeyword
 from starlette.concurrency import run_in_threadpool
 import json 
 from .Search import searchVerses
@@ -53,7 +53,8 @@ def doProcess(audioFile):
 
         surahInfo= f"{surahNumber}. {nameTransliteration} - {nameTranslation}"
 
-        newDict = {"SurahInfo": surahInfo, "VerseNumber": verseNumber, "VerseArabic": verseArabic, "VerseEnglish": verseEnglish, "verseIndex" : verseIndex}
+        newDict = {"SurahInfo": surahInfo, "VerseNumber": verseNumber, "VerseArabic": verseArabic, "VerseEnglish": verseEnglish, "VerseIndex" : verseIndex}
+        print(newDict)
 
         return newDict
     else:
@@ -74,7 +75,11 @@ def SearchEmbed(query: str):
     with open("app/data/VersesWithID.json", "r", encoding="utf-8") as file:
         verseIDJson = json.load(file)
     for result in searchResult:
-        results.append(verseIDJson[result["verseId"]])
+        verseData = verseIDJson[result["verseId"]]
+        verseData["VerseIndex"] = result["VerseIndex"]
+        results.append(verseData)
+
+    print(results[0])
         
     if len(results) == 0:
         return None

@@ -57,7 +57,8 @@ def searchVerses(queryText,
             "similarity": float(similarities[rowIdx]),
             "verseEnglish": verseObj.get("VerseEnglish"),
             "verseArabic": verseObj.get("VerseWithoutHarakat"),
-            "tags": verseObj.get("tags", [])
+            "tags": verseObj.get("tags", []),
+            "VerseIndex": int(rowIdx)
         })
 
     return results

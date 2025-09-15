@@ -1,9 +1,9 @@
 from fastapi import FastAPI, APIRouter, UploadFile, File
 from typing import  Annotated
-from .main2 import TranscribeAudio, LoadDataSet, ProcessMatches, SearchKeyword
+# from .main2 import SearchKeyword
 from starlette.concurrency import run_in_threadpool
 import json 
-from .Search import searchVerses
+from .Search import SearchVerses, SearchAudio
 
 app =  FastAPI(title="Muktashif")
 router = APIRouter( )
@@ -16,61 +16,37 @@ def root():
 async def uploadAudio(audioFile: Annotated[UploadFile, File()]):
     audio = audioFile.file
     
-    result = await run_in_threadpool(doProcess, audio)
+    result = await run_in_threadpool(SearchAudio, audio)
     if result:
         return result
     else:
-        default = {"SurahInfo": None, "VerseNumber": None, "VerseArabic": None, "VerseEnglish": None}
+        default = {
+        "VerseID": None,
+        "SurahNumber": None,
+        "VerseNumber": None,
+        "SurahNameArabic": None,
+        "SurahNameTransliteration": None,
+        "SurahNameEnglish": None,
+        "VerseWithHarakat": None,
+        "VerseWithoutHarakat": None,
+        "VerseEnglish": None,
+        "VerseIndex": None
+    }
+
         return default
     
-def doProcess(audioFile):
-    transcribedAudio = TranscribeAudio(audioFile)
-    dataset = LoadDataSet("ArabicDataset.json")
-    
-    matches = ProcessMatches(transcribedAudio, dataset)
-    if matches:
-        
-        bestMatch = matches[0]
-        verseIndex = bestMatch[2]
-        bestMatchDict = dataset[verseIndex] #bestMatch[2] is index of the best match dict in the dtaaset list
-        
-        with open("FullDataset.json", "r", encoding="utf-8") as file:
-            fullDataset = json.load(file)
 
-        
-        surahNumber = int(bestMatchDict["Surah"])
-        verseNumber = int(bestMatchDict["Ayah"])
-
-        surahDict = fullDataset[surahNumber - 1]
-
-        nameTransliteration = surahDict["transliteration"]
-        nameTranslation = surahDict["translation"]
-
-        verseDict = surahDict["verses"][verseNumber- 1]
-
-        verseArabic = verseDict["text"]
-        verseEnglish = verseDict["translation"]
-
-        surahInfo= f"{surahNumber}. {nameTransliteration} - {nameTranslation}"
-
-        newDict = {"SurahInfo": surahInfo, "VerseNumber": verseNumber, "VerseArabic": verseArabic, "VerseEnglish": verseEnglish, "VerseIndex" : verseIndex}
-        print(newDict)
-
-        return newDict
-    else:
-        return None
-
-@router.get("/searchkeyword")
-def Search( keyword: str):
-    result = SearchKeyword(keyword)
-    if len(result) == 0:
-        return None
-    return result
+# @router.get("/searchkeyword")
+# def Search( keyword: str):
+#     result = SearchKeyword(keyword)
+#     if len(result) == 0:
+#         return None
+#     return result
 
 @router.get("/searchembedding")
-def SearchEmbed(query: str):
+async def SearchEmbed(query: str):
     results = []
-    searchResult = searchVerses(query)
+    searchResult = await run_in_threadpool(SearchVerses, query)
 
     with open("app/data/VersesWithID.json", "r", encoding="utf-8") as file:
         verseIDJson = json.load(file)

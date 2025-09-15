@@ -3,7 +3,7 @@ import numpy as np
 from dotenv import load_dotenv
 from openai import OpenAI
 import os
-
+from .main2 import TranscribeAudio, LoadDataSet, ProcessMatches
 load_dotenv()
 apiKey = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=apiKey)
@@ -18,7 +18,7 @@ def embedQueryText(queryText: str, client, modelName: str):
     response = client.embeddings.create(model=modelName, input=[queryText])
     return np.array(response.data[0].embedding, dtype=np.float32)
 
-def searchVerses(queryText,
+def SearchVerses(queryText,
                  embeddingsPath="app/data/embeddings.npy",
                  indexPath="app/data/index.json",
                  versesPath="app/data/Verses.json",
@@ -62,3 +62,18 @@ def searchVerses(queryText,
         })
 
     return results
+
+def SearchAudio(audioFile):
+    transcribedAudio = TranscribeAudio(audioFile)
+    dataset = LoadDataSet("app/data/Verses.json")
+    
+    matches = ProcessMatches(transcribedAudio, dataset)
+    if matches:
+        
+        bestMatch = matches[0]
+        verseIndex = bestMatch[2]
+        bestMatchDict = dataset[verseIndex] #bestMatch[2] is index of the best match dict in the dataaset list
+        bestMatchDict["VerseIndex"] = verseIndex
+        return bestMatchDict
+    else:
+        return None

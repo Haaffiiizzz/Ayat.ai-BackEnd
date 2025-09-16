@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 import os
 from .main2 import TranscribeAudio, LoadDataSet, ProcessMatches
+from .rerank import Rerank
 load_dotenv()
 apiKey = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=apiKey)
@@ -22,46 +23,44 @@ def SearchVerses(queryText,
                  embeddingsPath="app/data/embeddings.npy",
                  indexPath="app/data/index.json",
                  versesPath="app/data/Verses.json",
-                 k=10,
+                 minSimilarity=0.2,
                  client=client,
                  modelName="text-embedding-3-large"):
-    # load embeddings
+
     embeddingsMatrix = np.load(embeddingsPath)
 
-    # load index
     with open(indexPath, "r", encoding="utf-8") as f:
         indexMeta = json.load(f)
     rowToVerseId = {rowIdx: verseId for verseId, rowIdx in indexMeta["index"].items()}
 
-    # embed query
     queryVector = embedQueryText(queryText, client, modelName)
 
-    # compute similarities
     similarities = cosineSimilarity(queryVector, embeddingsMatrix)
 
-    # get top-k row indices
-    topRowIndices = np.argsort(-similarities)[:k]
-    results = []
-
-    # load verses into a dict for quick lookup
     with open(versesPath, "r", encoding="utf-8") as f:
         versesData = json.load(f)
     verseById = {v["VerseID"]: v for v in versesData}
 
-    # build results
-    for rowIdx in topRowIndices:
-        verseId = rowToVerseId[rowIdx]
-        verseObj = verseById[verseId]
-        results.append({
-            "verseId": verseId,
-            "similarity": float(similarities[rowIdx]),
-            "verseEnglish": verseObj.get("VerseEnglish"),
-            "verseArabic": verseObj.get("VerseWithoutHarakat"),
-            "tags": verseObj.get("tags", []),
-            "VerseIndex": int(rowIdx)
-        })
+    results = []
+    for rowIdx, score in enumerate(similarities):
+        if score >= minSimilarity:  # 👈 keep everything above threshold
+            verseId = rowToVerseId[rowIdx]
+            verseObj = verseById[verseId]
+            results.append({
+                "verseId": verseId,
+                "similarity": float(score),
+                "verseEnglish": verseObj.get("VerseEnglish"),
+                "verseArabic": verseObj.get("VerseWithoutHarakat"),
+                "tags": verseObj.get("tags", []),
+                "VerseIndex": int(rowIdx)
+            })
 
-    return results
+    # sort results from most similar to least similar
+    results.sort(key=lambda x: -x["similarity"])
+    
+    rerankedResult = Rerank(queryText, results)
+    return rerankedResult
+
 
 def SearchAudio(audioFile):
     transcribedAudio = TranscribeAudio(audioFile)

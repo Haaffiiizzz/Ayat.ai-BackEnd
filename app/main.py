@@ -55,10 +55,10 @@ async def SearchEmbed(query: str):
         verseData["VerseIndex"] = result["VerseIndex"]
         results.append(verseData)
 
-    print(results[0])
         
     if len(results) == 0:
         return None
+    # print(results[:15])
     return results
 
     

@@ -1,10 +1,10 @@
 venv/
 *.mp3
 *.json
-*.txt
 *.vtt
 *.tsv
 *.srt
 app/__pycache__
 .env
 eb-venv/
+data/not needed/quran-dataset.txt

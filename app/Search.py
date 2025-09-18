@@ -43,7 +43,7 @@ def SearchVerses(queryText,
 
     results = []
     for rowIdx, score in enumerate(similarities):
-        if score >= minSimilarity:  # 👈 keep everything above threshold
+        if score >= minSimilarity:  
             verseId = rowToVerseId[rowIdx]
             verseObj = verseById[verseId]
             results.append({
@@ -57,6 +57,7 @@ def SearchVerses(queryText,
 
     # sort results from most similar to least similar
     results.sort(key=lambda x: -x["similarity"])
+    
     
     rerankedResult = Rerank(queryText, results)
     return rerankedResult

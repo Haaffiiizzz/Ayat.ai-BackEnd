@@ -7,3 +7,4 @@ venv/
 *.srt
 app/__pycache__
 .env
+eb-venv/

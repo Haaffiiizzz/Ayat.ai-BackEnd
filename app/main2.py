@@ -66,7 +66,7 @@ def ProcessMatches(ResultAyah: str, Dataset: list):
 
     matches = process.extract(
         ResultAyah,
-        [i["Verse"] for i in Dataset],
+        [i["VerseWithoutHarakat"] for i in Dataset],
         scorer=fuzz.token_set_ratio,
         score_cutoff=70,
         limit=None
@@ -75,21 +75,21 @@ def ProcessMatches(ResultAyah: str, Dataset: list):
     matches.sort(key= lambda x: x[1], reverse=True )
     return matches
 
-def SearchKeyword(Keyword: str) -> list:
-    with open("FullDataset.json", "r", encoding="utf-8") as datasetFile:
-        dataset: list = json.load(datasetFile)
+# def SearchKeyword(Keyword: str) -> list:
+#     with open("FullDataset.json", "r", encoding="utf-8") as datasetFile:
+#         dataset: list = json.load(datasetFile)
 
-    result = []
+#     result = []
 
-    for surah in dataset:
-        verses = surah["verses"]
-        for verse in verses:
-            if Keyword.strip().lower() in verse["translation"].strip().lower():
-                surahInfo = f"{surah['id']}. {surah['transliteration']} - {surah['translation']}"
-                verseData = {"SurahInfo": surahInfo, "VerseNumber": verse["id"], "VerseArabic": verse["text"], "VerseEnglish": verse["translation"]}
-                result.append(verseData)
+#     for surah in dataset:
+#         verses = surah["verses"]
+#         for verse in verses:
+#             if Keyword.strip().lower() in verse["translation"].strip().lower():
+#                 surahInfo = f"{surah['id']}. {surah['transliteration']} - {surah['translation']}"
+#                 verseData = {"SurahInfo": surahInfo, "VerseNumber": verse["id"], "VerseArabic": verse["text"], "VerseEnglish": verse["translation"]}
+#                 result.append(verseData)
                 
-    return result
+#     return result
 
 # def SearchEmbedding(Query: str, limit: int = 25 ) -> list:
     

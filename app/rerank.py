@@ -11,7 +11,7 @@ def Rerank(query, results, topN=None):
     topN: optional number of top reranked results to keep
     """
     inputs = tokenizer(
-        [(query, r["verseEnglish"]) for r in results],
+        [(query, r["VerseObject"]["VerseEnglish"]) for r in results],
         padding=True,
         truncation=True,
         return_tensors="pt"

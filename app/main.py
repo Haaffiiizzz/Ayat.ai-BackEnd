@@ -48,11 +48,9 @@ async def SearchEmbed(query: str):
     results = []
     searchResult = await run_in_threadpool(SearchVerses, query)
 
-    with open("app/data/VersesWithID.json", "r", encoding="utf-8") as file:
-        verseIDJson = json.load(file)
+    
     for result in searchResult:
-        verseData = verseIDJson[result["verseId"]]
-        verseData["VerseIndex"] = result["VerseIndex"]
+        verseData = result["verseObject"]
         results.append(verseData)
 
         

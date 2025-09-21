@@ -47,12 +47,9 @@ def SearchVerses(queryText,
             verseId = rowToVerseId[rowIdx]
             verseObj = verseById[verseId]
             results.append({
-                "verseId": verseId,
+                "VerseID": verseId,
                 "similarity": float(score),
-                "verseEnglish": verseObj.get("VerseEnglish"),
-                "verseArabic": verseObj.get("VerseWithoutHarakat"),
-                "tags": verseObj.get("tags", []),
-                "VerseIndex": int(rowIdx)
+                "VerseObject": verseObj
             })
 
     # sort results from most similar to least similar
@@ -73,7 +70,6 @@ def SearchAudio(audioFile):
         bestMatch = matches[0]
         verseIndex = bestMatch[2]
         bestMatchDict = dataset[verseIndex] #bestMatch[2] is index of the best match dict in the dataaset list
-        bestMatchDict["VerseIndex"] = verseIndex
         return bestMatchDict
     else:
         return None

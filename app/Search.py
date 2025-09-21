@@ -62,6 +62,7 @@ def SearchVerses(queryText,
 
 def SearchAudio(audioFile):
     transcribedAudio = TranscribeAudio(audioFile)
+    print("Transcribed audio ", transcribedAudio)
     dataset = LoadDataSet("app/data/Verses.json")
     
     matches = ProcessMatches(transcribedAudio, dataset)

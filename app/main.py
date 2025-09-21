@@ -17,6 +17,7 @@ async def uploadAudio(audioFile: Annotated[UploadFile, File()]):
     audio = audioFile.file
     
     result = await run_in_threadpool(SearchAudio, audio)
+    print("result ", result)
     if result:
         return result
     else:
@@ -50,7 +51,7 @@ async def SearchEmbed(query: str):
 
     
     for result in searchResult:
-        verseData = result["verseObject"]
+        verseData = result["VerseObject"]
         results.append(verseData)
 
         

@@ -9,6 +9,8 @@ eb-venv/
 data/not needed/quran-dataset.txt
 Fix.pem
 venv/
+
+
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml

@@ -63,7 +63,7 @@ nltk==3.9.1
 numba==0.61.2
 numpy==2.2.6
 openai==1.102.0
-openai-whisper==20250625
+openai-whisper
 orjson==3.11.1
 packaging==24.2
 pandas==2.3.2

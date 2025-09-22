@@ -8,3 +8,8 @@ app/__pycache__
 eb-venv/
 data/not needed/quran-dataset.txt
 Fix.pem
+venv/
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

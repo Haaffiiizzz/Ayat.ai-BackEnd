@@ -1,5 +1,4 @@
 *.mp3
-*.json
 *.vtt
 *.tsv
 *.srt
@@ -10,8 +9,3 @@ data/not needed/quran-dataset.txt
 Fix.pem
 venv/
 
-
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml

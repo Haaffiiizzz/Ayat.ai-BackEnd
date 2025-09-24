@@ -63,7 +63,7 @@ nltk==3.9.1
 numba==0.61.2
 numpy==2.2.6
 openai==1.102.0
-openai-whisper
+openai-whisper @ git+https://github.com/openai/whisper.git@c0d2f624c09dc18e709e37c2ad90c039a4eb72a2
 orjson==3.11.1
 packaging==24.2
 pandas==2.3.2

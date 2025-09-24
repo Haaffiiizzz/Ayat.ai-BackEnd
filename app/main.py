@@ -1,4 +1,6 @@
 from fastapi import FastAPI, APIRouter, UploadFile, File
+
+from fastapi.middleware.cors import CORSMiddleware
 from typing import  Annotated
 # from .main2 import SearchKeyword
 from starlette.concurrency import run_in_threadpool
@@ -7,6 +9,14 @@ from .Search import SearchVerses, SearchAudio
 
 app =  FastAPI(title="Muktashif")
 router = APIRouter( )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Or a list of allowed origins for security
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @router.get("/")
 def root():

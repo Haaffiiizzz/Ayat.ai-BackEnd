@@ -6,8 +6,16 @@ from typing import  Annotated
 from starlette.concurrency import run_in_threadpool
 import json 
 from .Search import SearchVerses, SearchAudio
+import whisper
 
 app =  FastAPI(title="Muktashif")
+
+@app.on_event("startup")
+async def startup_event():
+    """Load the Whisper model on startup and store it in app state"""
+    print("Loading Whisper model...")
+    app.state.whisper_model = whisper.load_model("small")
+    print("Whisper model loaded successfully!")
 router = APIRouter( )
 app.add_middleware(
     CORSMiddleware,
@@ -26,7 +34,7 @@ def root():
 async def uploadAudio(audioFile: Annotated[UploadFile, File()]):
     audio = audioFile.file
     
-    result = await run_in_threadpool(SearchAudio, audio)
+    result = await run_in_threadpool(SearchAudio, audio, app.state.whisper_model)
     print("result ", result)
     if result:
         return result

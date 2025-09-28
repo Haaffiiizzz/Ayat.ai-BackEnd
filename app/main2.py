@@ -10,9 +10,7 @@ load_dotenv()
 def l2_normalize(mat: np.ndarray, axis=1, eps=1e-12):
     norm = np.sqrt((mat * mat).sum(axis=axis, keepdims=True)).clip(min=eps)
     return mat / norm
-#load model
-
-TransciptionModel = whisper.load_model("small")
+# Model will be loaded in main.py startup event
 
 # EmbeddingModel = SentenceTransformer("all-MiniLM-L6-v2")
 # embeddings = np.load("app/data/verses_emb_minilm_cosine.npy")
@@ -21,7 +19,7 @@ TransciptionModel = whisper.load_model("small")
 # df["VerseEnglish"] = df["VerseEnglish"].fillna("").str.strip()
 
 
-def TranscribeAudio(audioFile) -> str:
+def TranscribeAudio(audioFile, model) -> str:
     '''
     Use Whisper Model to transcribe the audio file given as a file-like object, 
     and return the transcribed audio.
@@ -31,7 +29,7 @@ def TranscribeAudio(audioFile) -> str:
         tmp.write(audioFile.read())
         tmp_path = tmp.name
 
-    TranscribedObject: dict = TransciptionModel.transcribe(tmp_path, language="ar")
+    TranscribedObject: dict = model.transcribe(tmp_path, language="ar")
     AyahText = TranscribedObject["text"].strip()
 
     os.remove(tmp_path)

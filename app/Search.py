@@ -60,8 +60,8 @@ def SearchVerses(queryText,
     return rerankedResult
 
 
-def SearchAudio(audioFile):
-    transcribedAudio = TranscribeAudio(audioFile)
+def SearchAudio(audioFile, model):
+    transcribedAudio = TranscribeAudio(audioFile, model)
     print("Transcribed audio ", transcribedAudio)
     dataset = LoadDataSet("app/data/Verses.json")
     

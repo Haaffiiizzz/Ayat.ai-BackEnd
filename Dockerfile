@@ -5,7 +5,8 @@ FROM python:3.13-slim
 WORKDIR /app
 
 # Install system dependencies
-RUN apt update && apt install -y git build-essential curl && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt install -y git build-essential curl ffmpeg && rm -rf /var/lib/apt/lists/*
+
 
 # Copy requirements and install
 COPY requirements.txt .

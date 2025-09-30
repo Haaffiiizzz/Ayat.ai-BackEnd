@@ -1,4 +1,3 @@
-import whisper
 import os
 import json
 from rapidfuzz import process, fuzz
@@ -6,6 +5,7 @@ import tempfile
 import numpy as np
 from dotenv import load_dotenv
 load_dotenv()
+from openai import OpenAI
 
 def l2_normalize(mat: np.ndarray, axis=1, eps=1e-12):
     norm = np.sqrt((mat * mat).sum(axis=axis, keepdims=True)).clip(min=eps)
@@ -19,22 +19,38 @@ def l2_normalize(mat: np.ndarray, axis=1, eps=1e-12):
 # df["VerseEnglish"] = df["VerseEnglish"].fillna("").str.strip()
 
 
+client = OpenAI()
+
+import re
+
+def removeHarakat(text: str) -> str:
+    harakatPattern = re.compile(r'[\u0617-\u061A\u064B-\u0652]')
+    return harakatPattern.sub('', text)
+
 def TranscribeAudio(audioFile, model) -> str:
     '''
-    Use Whisper Model to transcribe the audio file given as a file-like object, 
+    Use Whisper API to transcribe the audio file given as a file-like object, 
     and return the transcribed audio.
     '''
-
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp:
-        tmp.write(audioFile.read())
+    # TranscribedObject: dict = model.transcribe(tmp_path, language="ar")
+    with tempfile.NamedTemporaryFile(delete=False, suffix=f".{audioFile.filename.split('.')[-1]}") as tmp:
+        tmp.write(audioFile.file.read())
         tmp_path = tmp.name
 
-    TranscribedObject: dict = model.transcribe(tmp_path, language="ar")
-    AyahText = TranscribedObject["text"].strip()
+
+    with open(tmp_path, "rb") as f:
+        transcription = client.audio.transcriptions.create(
+            model="whisper-1",
+            file=f,
+            language="ar"
+        )
+
+    ayahText = transcription.text.strip()
+    ayahText = removeHarakat(ayahText)
 
     os.remove(tmp_path)
 
-    return AyahText
+    return ayahText
 
 
 def LoadDataSet(DatasetPath: str) -> list:
@@ -63,7 +79,7 @@ def ProcessMatches(ResultAyah: str, Dataset: list):
         ResultAyah,
         [i["VerseWithoutHarakat"] for i in Dataset],
         scorer=fuzz.token_set_ratio,
-        score_cutoff=70,
+        score_cutoff=65,
         limit=None
     ) 
     

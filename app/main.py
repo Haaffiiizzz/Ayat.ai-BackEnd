@@ -2,16 +2,21 @@ from fastapi import FastAPI, APIRouter, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from typing import  Annotated
 from starlette.concurrency import run_in_threadpool
-from .Search import SearchVerses, SearchAudio
+from .Search import SearchVerses, SearchAudio, InitSearchCache
 from .rerank import preload_reranker
 
 app =  FastAPI(title="Muktashif")
 
 @app.on_event("startup")
 async def startup_event():
-    # Optionally preload reranker to avoid first-hit latency
+    """Preload heavy assets and caches to avoid first-request latency.
+
+    - Preloads the cross-encoder reranker model/tokenizer.
+    - Preloads embeddings (memmap), row norms, index map, and verse data.
+    """
     await run_in_threadpool(preload_reranker)
-router = APIRouter( )
+    await run_in_threadpool(InitSearchCache, "app/data/embeddings.npy", "app/data/index.json", "app/data/Verses.json")
+router = APIRouter()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Or a list of allowed origins for security
@@ -23,19 +28,17 @@ app.add_middleware(
 
 @router.get("/")
 def root():
+    """Health endpoint returning a simple message."""
     return {"message": "Well Hello there."}
 
 @router.post("/uploadAudio/")
 async def uploadAudio(audioFile: Annotated[UploadFile, File()]):
+    """Transcribe uploaded audio, fuzzy-match against verses, and return best match."""
     audio = audioFile
-    
-    # result = await run_in_threadpool(SearchAudio, audio, app.state.whisper_model)
     result = await run_in_threadpool(SearchAudio, audio, "null")
-    print("result ", result)
     if result:
         return result
-    else:
-        default = {
+    default = {
         "VerseID": None,
         "SurahNumber": None,
         "VerseNumber": None,
@@ -45,33 +48,23 @@ async def uploadAudio(audioFile: Annotated[UploadFile, File()]):
         "VerseWithHarakat": None,
         "VerseWithoutHarakat": None,
         "VerseEnglish": None,
-        "VerseIndex": None
+        "VerseIndex": None,
     }
-
-        return default
+    return default
     
-
-# @router.get("/searchkeyword")
-# def Search( keyword: str):
-#     result = SearchKeyword(keyword)
-#     if len(result) == 0:
-#         return None
-#     return result
 
 @router.get("/searchembedding")
 async def SearchEmbed(query: str):
+    """Search verses via embeddings + cross-encoder; return verse objects only."""
     results = []
     searchResult = await run_in_threadpool(SearchVerses, query)
 
-    
     for result in searchResult:
         verseData = result["VerseObject"]
         results.append(verseData)
 
-        
     if len(results) == 0:
         return None
-    # print(results[:15])
     return results
 
     

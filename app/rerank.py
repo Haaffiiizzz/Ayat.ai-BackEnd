@@ -6,6 +6,7 @@ _tokenizer = None
 _model = None
 
 def _get_model():
+    """Lazily load and return (tokenizer, model) with safe CPU thread limits."""
     global _tokenizer, _model
     if _tokenizer is None or _model is None:
         # Limit CPU thread usage to avoid system freeze under load
@@ -56,8 +57,5 @@ def Rerank(query, results, topN=None, batch_size=16):
     return results
 
 def preload_reranker():
-    """
-    Preload tokenizer and model into memory at app startup to avoid
-    first-request latency. Safe to call multiple times.
-    """
+    """Preload tokenizer and model at startup to avoid first-hit latency."""
     _get_model()

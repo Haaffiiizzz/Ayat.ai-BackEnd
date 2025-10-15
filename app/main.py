@@ -3,15 +3,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import  Annotated
 from starlette.concurrency import run_in_threadpool
 from .Search import SearchVerses, SearchAudio
+from .rerank import preload_reranker
 
 app =  FastAPI(title="Muktashif")
 
-# @app.on_event("startup")
-# async def startup_event():
-#     """Load the Whisper model on startup and store it in app state"""
-#     print("Loading Whisper model...")
-#     app.state.whisper_model = whisper.load_model("small")
-#     print("Whisper model loaded successfully!")
+@app.on_event("startup")
+async def startup_event():
+    # Optionally preload reranker to avoid first-hit latency
+    await run_in_threadpool(preload_reranker)
 router = APIRouter( )
 app.add_middleware(
     CORSMiddleware,

@@ -77,8 +77,8 @@ def SearchVerses(
     indexPath="app/data/index.json",
     versesPath="app/data/Verses.json",
     minSimilarity=0.2,
-    topK_candidates=None,
-    topN_final=None,
+    topK_candidates=100,
+    topN_final=100,
     client=client,
     modelName="text-embedding-3-large",
 ):
